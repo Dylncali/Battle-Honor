@@ -17,6 +17,8 @@ public class HPHandler : NetworkBehaviour
 
     const byte startingHP = 100;
     Image currentHealthDisplay;
+     public GameObject playerModel;
+     [SerializeField] ParticleSystem deathExplosion;
 
     private void Awake() {
         animator = GetComponent<Animator>();
@@ -28,6 +30,7 @@ public class HPHandler : NetworkBehaviour
         if(currentHealthDisplay == null)
             Debug.Log("Could not find health bar");
         HP = startingHP;
+        currentHealthDisplay.fillAmount = HP/startingHP;
         isDead = false;
         isInitialized = true;
         
@@ -44,17 +47,23 @@ public class HPHandler : NetworkBehaviour
         // HP = (byte)Mathf.Clamp(HP, 0, startingHP);
     // Updates the Player UI so they know they have been hit
 
-        Debug.Log($"You too Damage!! Your health is {HP}");
+        
 
     //Checks if the Object that has been hit has Input authority, If it does not then trigger "Hit animation"
         if(!Object.HasInputAuthority)
             animator.Play("GetHit01_SwordAndShield");
-            currentHealthDisplay.fillAmount = HP/startingHP;
+             
+        Debug.Log($"You too Damage!! Your health is {HP}");
+        
         
         if(HP<=0)
         {
+            
             isDead = true;
             Debug.Log("You is Dead");
+            DeathRespawn();
+            
+
         }
         
 
@@ -79,9 +88,11 @@ public class HPHandler : NetworkBehaviour
         if(!isInitialized)
             return;
         
-        if(Object.HasInputAuthority)
+        if(Object.HasInputAuthority){
             animator.Play("GetHit01_SwordAndShield");
-            currentHealthDisplay.fillAmount = HP/startingHP;
+            currentHealthDisplay.fillAmount = (float)HP/(float)startingHP;
+        }
+        
     }
 
     static void OnStateChanged(Changed<HPHandler> changed)
@@ -89,9 +100,29 @@ public class HPHandler : NetworkBehaviour
         Debug.Log($"{Time.time} OnHPChanged value {changed.Behaviour.isDead}");
     }
 
+    private void DeathRespawn()
+    {
+        if(isDead){
+        StartCoroutine(WaituntilExplosion());
+        transform.position = Utils.GetSpawnPoint();
+        HP = startingHP;
+        isDead = false;
+        }
+       
+    }
 
 
-    
+
+    IEnumerator WaituntilExplosion(){
+        deathExplosion.Play();
+        Debug.Log("Explostion playing");
+        yield return new WaitForSeconds(deathExplosion.main.duration);
+        Debug.Log("Respawning player");
+        transform.position = Utils.GetSpawnPoint();
+        HP = startingHP;
+        isDead = false;
+        
+    }
 
 
 

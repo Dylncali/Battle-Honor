@@ -15,7 +15,22 @@ public static class Utils
          return spawnPad.transform.position;
       }
       else
-        return new Vector3(-7.38f, 1.677f, 2.542f);
+        {
+            
+            GameObject [] spawnPoints = GameObject.FindGameObjectsWithTag("Respawn");
+            
+            System.Random rnd = new System.Random();
+
+            if(spawnPoints.Length>0)
+            {
+                int index = rnd.Next(spawnPoints.Length);
+                return spawnPoints[index].transform.position;
+            }
+            else{
+                return new Vector3(-7.38f, 1.677f, 2.542f);
+            }
+        }
+       
    }
    public static void SetRenderLayerInChildren(Transform transform, int layerNumber)
     {

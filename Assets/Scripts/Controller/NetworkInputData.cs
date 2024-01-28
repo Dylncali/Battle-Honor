@@ -7,7 +7,7 @@ public struct NetworkInputData : INetworkInput
 {
    public Vector2 movementInput;
    public Vector3 aimForwardVector;
-   public NetworkBool isJumpPressed;
+   public NetworkBool isRollPressed;
    public Vector3 weaponVector;
    public NetworkBool isAtkingPressed;
 }

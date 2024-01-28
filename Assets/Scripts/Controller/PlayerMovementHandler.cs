@@ -8,6 +8,8 @@ public class PlayerMovementHandler : NetworkBehaviour
    PlayerMovement playerMovement;
 
    AnimationStateController animationStateContoller;
+
+   HPHandler hPHandler;
    
 
    public Camera localCamera;
@@ -19,6 +21,7 @@ public class PlayerMovementHandler : NetworkBehaviour
     {
             playerMovement = GetComponent<PlayerMovement>();
             animationStateContoller = GetComponent<AnimationStateController>(); 
+            hPHandler = GetComponent<HPHandler>();
             
     }
 
@@ -50,14 +53,14 @@ public class PlayerMovementHandler : NetworkBehaviour
                 
 
                 //jump
-                if(networkInputData.isJumpPressed)
-                {
-                    playerMovement.Jump();
+                // if(networkInputData.isRollPressed)
+                // {
+                //     playerMovement.Jump();
                     
-                }
+                // }
                 animationStateContoller.movement(moveDirection);
                 // animationStateContoller.backwordmovement(moveDirection);
-                animationStateContoller.jumpAnimation(networkInputData.isJumpPressed);
+                animationStateContoller.rollAnimation(networkInputData.isRollPressed);
                 
                 // animationStateContoller.activateAtk(networkInputData.isAtkingPressed);
                 
@@ -73,6 +76,7 @@ public class PlayerMovementHandler : NetworkBehaviour
         if(transform.position.y < -12)
         {
             transform.position = Utils.GetSpawnPoint();
+            
         }
     }
 

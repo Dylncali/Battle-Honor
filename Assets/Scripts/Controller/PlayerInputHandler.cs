@@ -9,7 +9,7 @@ public class PlayerInputHandler : MonoBehaviour
     public Vector2 cameraInputVector = Vector2.zero;
     LocalCameraHandler localCameraHandler;
 
-    bool isJumpButtonPressed = false;
+    bool isRollButtonPressed = false;
     bool isAtking = false;
     PlayerMovementHandler playerMovementHandler;
 
@@ -39,7 +39,7 @@ public class PlayerInputHandler : MonoBehaviour
         isAtking = true;
 
         if(Input.GetButtonDown("Jump"))
-        isJumpButtonPressed = true;
+        isRollButtonPressed = true;
 
     }
 
@@ -55,10 +55,10 @@ public class PlayerInputHandler : MonoBehaviour
         networkInputData.movementInput = moveInputVector;
 
         //Is player Jumping?
-        networkInputData.isJumpPressed = isJumpButtonPressed;
+        networkInputData.isRollPressed = isRollButtonPressed;
 
         //reset jump button
-        isJumpButtonPressed = false;
+        isRollButtonPressed = false;
 
         networkInputData.isAtkingPressed = isAtking;
 

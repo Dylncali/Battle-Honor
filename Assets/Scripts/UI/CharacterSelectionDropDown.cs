@@ -6,25 +6,26 @@ using UnityEngine.UI;
 using Fusion;
 using Fusion.Sockets;
 using UnityEngine.SceneManagement;
+using Photon.Pun.Demo.PunBasics;
 public class CharacterSelectionDropDown : NetworkBehaviour
 {
     [SerializeField] TMP_Dropdown characterDropdownSelection; 
     //  public NetworkRunner networkRunnerPrefab;
+
+    public TMP_InputField inputField;
     
     
     [HideInInspector]
     bool readyUp = false;
 
     void Start(){
-        GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
-        foreach(GameObject playerObject in playerObjects)
-            {
-                Camera camera = playerObject.GetComponentInChildren<Camera>();
-                Debug.Log("Camera found");
-                camera.gameObject.SetActive(false);
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
+        Debug.Log("Loading Game Manager");
+        
+        if(PlayerPrefs.HasKey("PlayerNickname"))
+        {
+            inputField.text = PlayerPrefs.GetString("PlayerNickname");
+        }
+
     }
 
 
@@ -32,6 +33,7 @@ public class CharacterSelectionDropDown : NetworkBehaviour
     public void CharacterSelection()
     {
         Debug.Log(characterDropdownSelection.options[characterDropdownSelection.value].text);
+    
     }
 
     public void Readyup()
@@ -43,8 +45,12 @@ public class CharacterSelectionDropDown : NetworkBehaviour
             {
                     DontDestroyOnLoad(gameObjectTotransfer);
             }
+            
+            PlayerPrefs.SetString("PlayerNickname", inputField.text);
+            PlayerPrefs.Save();
             Runner.SetActiveScene(2);
             readyUp = true;
+            
             
             Debug.Log(readyUp);
         }

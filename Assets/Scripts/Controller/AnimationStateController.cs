@@ -8,6 +8,8 @@ using UnityEngine;
 public class AnimationStateController : NetworkBehaviour
 {
     Animator animator;
+
+
     
 
     
@@ -41,7 +43,6 @@ public class AnimationStateController : NetworkBehaviour
        
         if (!isWalking && direction.magnitude>0)
         {
-            Debug.Log(direction.magnitude);
             animator.SetBool("IsWalking", true);
 
         }
@@ -70,19 +71,18 @@ public class AnimationStateController : NetworkBehaviour
     //     }
     // }
 
-    public void jumpAnimation(bool jumpPress)
+    public void rollAnimation(NetworkBool rollPressed)
     {
-        bool jump = animator.GetBool("jump");
-        
-       
-        if (!jump && jumpPress)
+        if(rollPressed)
         {
-            animator.SetBool("jump", true);
+            StartCoroutine(rolling());
+        }
+    }
+      IEnumerator rolling()
+    {
 
-        }
-        if (jump && !jumpPress)
-        {
-            animator.SetBool("jump", false);
-        }
+        animator.Play("Roll_forward");
+        yield return new WaitForSeconds(1f);
+
     }
 }
