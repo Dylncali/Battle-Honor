@@ -9,7 +9,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
-using JetBrains.Annotations;
+
 
 public class SpawnPlayers : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -112,38 +112,12 @@ public class SpawnPlayers : MonoBehaviour, INetworkRunnerCallbacks
     
     public void OnSceneLoadDone(NetworkRunner runner)
     {
-         if(runner.IsServer)
-            { 
-                
-
-                
-                    if(SceneManager.GetActiveScene().buildIndex == 1)
-                    {       Debug.Log("Finished Main menu");
-                           
-                            
-                        }
-                    else{
-                        Debug.Log("finished new scene");
-                        
-                        
-                    }
-                
-            }
-                
+        StartCoroutine(waitToLoad());
     }
 
     public void OnSceneLoadStart(NetworkRunner runner)
     {
-        if(SceneManager.GetActiveScene().buildIndex == 1)
-                {       Debug.Log("Loading Main menu");
-                        
-                         
-                        }
-                else{
-                    Debug.Log("Loading new scene");
-                    
-                   
-                }
+        
     }
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
@@ -161,7 +135,12 @@ public class SpawnPlayers : MonoBehaviour, INetworkRunnerCallbacks
         
     }
 
-
+    IEnumerator waitToLoad()
+    {
+        Debug.Log("Scene Loading");
+        yield return new WaitForSecondsRealtime(5);
+        Debug.Log("Can you see me now?");
+    }
 
     
 }

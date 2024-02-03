@@ -6,8 +6,8 @@ using UnityEngine.UI;
 using Fusion;
 using Fusion.Sockets;
 using UnityEngine.SceneManagement;
-using Photon.Pun.Demo.PunBasics;
-public class CharacterSelectionDropDown : NetworkBehaviour
+using System.Threading.Tasks;
+public class UIManager : NetworkBehaviour
 {
     [SerializeField] TMP_Dropdown characterDropdownSelection; 
     //  public NetworkRunner networkRunnerPrefab;
@@ -19,7 +19,20 @@ public class CharacterSelectionDropDown : NetworkBehaviour
     bool readyUp = false;
 
     void Start(){
-        Debug.Log("Loading Game Manager");
+        
+        GameObject [] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach(GameObject player in players)
+        {
+            Camera camera = player.gameObject.GetComponentInChildren<Camera>();
+            if(camera == null)
+            {
+                Debug.Log("Can't find camera");
+            
+            }
+            else{
+                Debug.Log("Found Camera");
+            }
+        }
         
         if(PlayerPrefs.HasKey("PlayerNickname"))
         {
@@ -60,6 +73,11 @@ public class CharacterSelectionDropDown : NetworkBehaviour
         }
         
     }
+
+
+
+    
+    
 
  
 }

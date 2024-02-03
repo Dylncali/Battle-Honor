@@ -17,9 +17,17 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
    [Networked(OnChanged = nameof(OnNickNameChanged))]
    public NetworkString<_16> nickName {get; set; }
 
+   bool isPublicJoinMessageSent = false;
+
+   NetworkInGameMessages networkInGameMessages;
+
    public Camera localCamera;
    Camera MainMenuCamera;
     int num = 0;
+
+    private void Awake() {
+        networkInGameMessages = GetComponent<NetworkInGameMessages>();
+    }
 
     void Update()
     {
@@ -56,6 +64,11 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     public void PlayerLeft(PlayerRef player)
     {
+        if(Object.HasStateAuthority)
+        {
+            networkInGameMessages.SendInGameRPCMessage(nickName.ToString(), "left");
+        }
+
         if(player ==Object.InputAuthority)
         {
             Runner.Despawn(Object);
@@ -97,5 +110,11 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     {
         Debug.Log($"[RPC] SetNickName {nickName}");
         this.nickName = nickName;
+
+        if(!isPublicJoinMessageSent)
+        {
+            networkInGameMessages.SendInGameRPCMessage(nickName, "joined");
+            isPublicJoinMessageSent = true;
+        }
     }
 }
